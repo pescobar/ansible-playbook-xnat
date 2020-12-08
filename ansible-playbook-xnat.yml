@@ -103,8 +103,29 @@
       import_role:
         name: geerlingguy.postgresql
 
-    - name: Create local accounts
+    - name: Install Tomcat 7
       import_role:
-        name: robertdebock.users
+        name: pescobar.apache_tomcat
+
+    - name: Download XNAT files
+      import_role:
+        name: ansible-role-xnat
+      tags: xnat
+
+    - name: Create profile file to define XNAT env vars
+      blockinfile:
+        dest: /etc/profile.d/xnat.sh
+        create: yes
+        owner: root
+        group: root
+        mode: 0644
+        marker: "# {mark} CREATED WITH ANSIBLE"
+        content: |
+          export XNAT_HOME={{ xnat_top_folder }}/home
+      tags: xnat
+
+    # - name: Create local accounts
+    #   import_role:
+    #     name: robertdebock.users
 
 # vim: tabstop=2 shiftwidth=2

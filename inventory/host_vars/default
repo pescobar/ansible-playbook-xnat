@@ -20,3 +20,11 @@ postgresql_databases:
 postgresql_users:
   - name: xnatdbuser
     password: xnatdbpass
+    db: xnat
+    priv: ALL
+
+tomcat_version: 7.0.107
+tomcat_jvm_memory_percentage_xms: 15
+tomcat_jvm_memory_percentage_xmx: 55
+#tomcat_listen_address: 127.0.0.1
+tomcat_catalina_opts_extra: "-Dxnat.home=/data/xnat/home"

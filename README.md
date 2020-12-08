@@ -26,7 +26,7 @@ Once the playbook execution completes you can monitor how XNAT boots:
 
 ```
 $> vagrant ssh
-$> tail -f /opt/tomcat/logs/catalina.out
+$> sudo tail -f /opt/tomcat/logs/catalina.out
 ```
 
 Once XNAT finished booting you can access it in `http://192.168.111.222:8080` and login as `admin/admin`

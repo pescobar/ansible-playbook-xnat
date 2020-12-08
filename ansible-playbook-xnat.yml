@@ -1,0 +1,110 @@
+---
+
+- name: ansible-playbook-xnat
+  hosts: all
+  gather_facts: true
+  remote_user: centos
+  become: true
+
+
+  tasks:
+
+    - name: Prepare the machine to be managed with ansible
+      import_role:
+        name: robertdebock.bootstrap
+
+    - name: Install core deps
+      import_role:
+        name: robertdebock.core_dependencies
+
+    # - name: set hostname as defined in inventory
+    #   hostname:
+    #     name: "{{ hostvars[inventory_hostname].inventory_hostname }}"
+
+    # - name: Configure the network
+    #   block:
+
+    #     - name: configure network interfaces
+    #       import_role:
+    #         name: MichaelRigart.interfaces
+
+    #     - meta: flush_handlers
+
+    #   tags: network
+
+    # - name: Configure iptables firewall
+    #   import_role:
+    #     name: geerlingguy.firewall
+    #   tags:
+    #     - network
+    #     - firewall
+    #     - iptables
+
+    - name: Make sure that cron is installed and enabled
+      import_role:
+        name: robertdebock.cron
+
+    - name: Configure NTP time
+      import_role:
+        name: robertdebock.ntp
+
+    # - name: configure postfix
+    #   import_role:
+    #     name: robertdebock.postfix
+
+    - name: Add EPEL yum repo | RedHat
+      package:
+        name: epel-release
+        state: installed
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install some basic packages
+      package:
+        name:
+          - vim
+          - git
+          - htop
+          - tmux
+
+    # - name: Configure the sshd server
+    #   import_role:
+    #     name: willshersystems.sshd
+    #   tags:
+    #     - ssh_config
+
+    # - name: Install and enable fail2ban
+    #   import_role:
+    #     name: robertdebock.fail2ban
+    #   tags: fail2ban
+
+    - name: Add upstream postgres yum repos for Centos7
+      yum:
+        name: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+        state: present
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == '7'
+
+    - name: Disable extra postgres yum repos. We only want the repo for postgres 9.6
+      yum_repository:
+        name: "{{ item }}"
+        description: "reinstall rpm pgdg-redhat-repo-latest.noarch.rpm to get this repo back"
+        baseurl: http://this.repo.is.disabled.com
+        file: pgdg-redhat-all
+        enabled: false
+      loop:
+        - "pgdg12"
+        - "pgdg11"
+        - "pgdg10"
+        - "pgdg95"
+      when: ansible_os_family == "RedHat"
+
+    - name: Configure postgres DBs and users
+      import_role:
+        name: geerlingguy.postgresql
+
+    - name: Create local accounts
+      import_role:
+        name: robertdebock.users
+
+# vim: tabstop=2 shiftwidth=2

@@ -42,6 +42,10 @@ roles:
   - name: pescobar.apache_tomcat
     version: 2.5.0
 
+  - name: ansible-role-xnat
+    src: https://github.com/pescobar/ansible-role-xnat.git
+    version: master
+
   # - name: nvidia.nvidia_driver
   #   src: https://github.com/pescobar/ansible-role-nvidia-driver.git
   #   scm: git

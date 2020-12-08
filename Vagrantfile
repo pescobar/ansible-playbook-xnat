@@ -64,6 +64,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible-playbook-xnat.yml"
     ansible.inventory_path = "inventory/hosts"
+    ansible.host_key_checking = false
+    #ansible.tags="xnat"
     #ansible.verbose = "-vvv"
   end
 

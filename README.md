@@ -10,32 +10,29 @@ This playbook has been tested with ansible 2.10.2
 This repo provides a [Vagrantfile](Vagrantfile) to test and develop the playbook.
 
 When using the Vagrant machine the ansible variables are defined in [inventory/host_vars/default](inventory/host_vars/default).
-First edit this file in case you want to adjust any ansible var.
+You can edit this file in case you want to adjust any ansible var (defaults should work)
 
-Once you have updated [inventory/host_vars/default](inventory/host_vars/default) you can execute the
-playbook from the top folder of this repo:
+You can execute the playbook in a vagrant VM from the top folder of this repo:
 
 ```
 $> ansible-galaxy role install -r requirements.yml -p ./roles
 $> vagrant up
 ```
 
-Once the playbook execution completes you can monitor how XNAT boots:
-
-**xnat needs some minutes to boot**
+Once the playbook execution completes you can monitor how XNAT boots (**xnat needs some minutes to boot**)
 
 ```
 $> vagrant ssh
 $> sudo tail -f /opt/tomcat/logs/catalina.out
 ```
 
-Once XNAT finished booting you can access it in `http://192.168.111.222:8080` and login as `admin/admin`
+Once XNAT finished booting you can access it in [http://192.168.111.222:8080](http://192.168.111.222:8080) and login as `admin/admin`
 
 
 ## Executing the playbook in another machine
 
  * copy file `inventory/host_vars/default` to `inventory/host_vars/your_machine_hostname`
- * edit `inventory/host_vars/your_machine_hostname` and adjust for your needs
+ * edit `inventory/host_vars/your_machine_hostname` and adjust it if needed (defaults should work)
  * add `your_machine_hostname` to [inventory/hosts](inventory/hosts)
  * download the dependency roles with `ansible-galaxy role install -r requirements.yml -p ./roles`
  * execute the playbook with `ansible-playbook -i inventory/hosts ansible-playbook-xnat.yml`

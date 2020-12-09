@@ -28,3 +28,19 @@ tomcat_jvm_memory_percentage_xms: 15
 tomcat_jvm_memory_percentage_xmx: 55
 #tomcat_listen_address: 127.0.0.1
 tomcat_catalina_opts_extra: "-Dxnat.home=/data/xnat/home"
+
+xnat_version: 1.7.6
+xnat_top_folder: /data/xnat
+xnat_user: tomcat
+xnat_group: tomcat
+
+xnat_db_name: xnat
+xnat_db_user: xnatdbuser
+xnat_db_pass: xnatdbpass
+
+xnat_tomcat_webapps_path: /opt/tomcat/webapps
+
+xnat_url: http://192.168.111.222:8080
+xnat_site_name: "XNAT"
+xnat_admin_email: admin@oldschool.edu
+xnat_smtp_server: mail.oldschool.edu

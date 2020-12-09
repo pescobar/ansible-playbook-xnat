@@ -124,6 +124,10 @@
           export XNAT_HOME={{ xnat_top_folder }}/home
       tags: xnat
 
+    - name: Configure apache as reverse proxy
+      import_role:
+        name: wcm_io_devops.apache
+
     # - name: Create local accounts
     #   import_role:
     #     name: robertdebock.users

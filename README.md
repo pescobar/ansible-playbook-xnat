@@ -26,7 +26,7 @@ $> vagrant ssh
 $> sudo tail -f /opt/tomcat/logs/catalina.out
 ```
 
-Once XNAT finished booting you can access it in [http://192.168.111.222:8080](http://192.168.111.222:8080) and login as `admin/admin`
+Once XNAT finished booting you can access it in [http://192.168.111.222](http://192.168.111.222) and login as `admin/admin`
 
 
 ## Executing the playbook in another machine

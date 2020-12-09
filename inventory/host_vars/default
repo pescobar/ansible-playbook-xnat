@@ -26,7 +26,8 @@ postgresql_users:
 tomcat_version: 7.0.107
 tomcat_jvm_memory_percentage_xms: 15
 tomcat_jvm_memory_percentage_xmx: 55
-#tomcat_listen_address: 127.0.0.1
+#tomcat_listen_address: 0.0.0.0
+tomcat_listen_address: 127.0.0.1
 tomcat_catalina_opts_extra: "-Dxnat.home=/data/xnat/home"
 
 xnat_version: 1.7.6
@@ -40,7 +41,39 @@ xnat_db_pass: xnatdbpass
 
 xnat_tomcat_webapps_path: /opt/tomcat/webapps
 
-xnat_url: http://192.168.111.222:8080
+#xnat_url: http://192.168.111.222:8080
+xnat_url: http://192.168.111.222
 xnat_site_name: "XNAT"
 xnat_admin_email: admin@oldschool.edu
 xnat_smtp_server: mail.oldschool.edu
+
+apache_vhosts:
+  - servername: "192.168.111.222"
+    #serveralias: ""
+    serveradmin: "admin@mail.com"
+    documentroot: "/var/www/html"
+    extra_parameters: |
+
+      # redirect all traffic to https
+      #RewriteEngine On
+      #RewriteCond %{HTTPS} off
+      #RewriteCond %{REQUEST_URI} !^/.well-known/
+      #RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+
+      ProxyRequests Off
+      ProxyPreserveHost On
+
+      <Proxy *>
+          Order deny,allow
+          Allow from all
+      </Proxy>
+
+      ProxyPass / http://127.0.0.1:8080/
+      ProxyPassReverse / http://127.0.0.1:8080/
+
+      # custom log format to register x-forwarded-for when using the web balancer
+      LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+      LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" proxy
+      SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+      CustomLog /var/log/httpd/access_log combined env=!forwarded
+      CustomLog /var/log/httpd/access_log proxy env=forwarded
